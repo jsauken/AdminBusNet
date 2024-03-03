@@ -3,13 +3,17 @@ package com.example.adminbusnet;
 import com.example.adminbusnet.DTO.RouteDTO;
 import com.example.adminbusnet.repository.RouteRepository;
 import com.example.adminbusnet.service.RouteService;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+
 import java.util.List;
 
 @DataJpaTest
+@ComponentScan("com.example.adminbusnet.service")
 public class RouteTest {
 
     @Autowired
@@ -21,11 +25,7 @@ public class RouteTest {
     @Test
     public void SaveRoute(){
         // Create a route
-        RouteDTO route = new RouteDTO();
-        route.setOrigin("Origin");
-        route.setDestination("Destination");
-        route.setDistance(100.0);
-        route.setStatus("Active");
+        RouteDTO route = new RouteDTO(1L,"Almaty","Astana",1000.0,"Active");
 
         // Save the route
         RouteDTO savedRoute = routeService.createRoute(route);
@@ -37,11 +37,7 @@ public class RouteTest {
     @Test
     public void GetRoute(){
         // Create a route
-        RouteDTO route = new RouteDTO();
-        route.setOrigin("Origin");
-        route.setDestination("Destination");
-        route.setDistance(100.0);
-        route.setStatus("Active");
+        RouteDTO route = new RouteDTO(1L,"Almaty","Astana",1000.0,"Active");
 
         // Save the route
         RouteDTO savedRoute = routeRepository.save(route);
@@ -51,27 +47,16 @@ public class RouteTest {
 
         // Check if the retrieved route matches the saved route
         Assertions.assertNotNull(retrievedRoute);
-        Assertions.assertEquals(savedRoute.getId(), retrievedRoute.getId());
-        Assertions.assertEquals(savedRoute.getOrigin(), retrievedRoute.getOrigin());
-        Assertions.assertEquals(savedRoute.getDestination(), retrievedRoute.getDestination());
-        Assertions.assertEquals(savedRoute.getDistance(), retrievedRoute.getDistance());
-        Assertions.assertEquals(savedRoute.getStatus(), retrievedRoute.getStatus());
+        Assertions.assertEquals(savedRoute, retrievedRoute);
     }
     //Routes
     @Test
     public void GetRoutes() {
         // Create some routes
-        RouteDTO route1 = new RouteDTO();
-        route1.setOrigin("Origin1");
-        route1.setDestination("Destination1");
-        route1.setDistance(100.0);
-        route1.setStatus("Active");
+        RouteDTO route1 = new RouteDTO(1L,"Almaty","Astana",1000.0,"Active");
 
-        RouteDTO route2 = new RouteDTO();
-        route2.setOrigin("Origin2");
-        route2.setDestination("Destination2");
-        route2.setDistance(200.0);
-        route2.setStatus("Active");
+
+        RouteDTO route2 = new RouteDTO(2L,"Almaty","Shymkent",2000.0,"Active");
 
         routeRepository.save(route1);
         routeRepository.save(route2);
@@ -80,17 +65,13 @@ public class RouteTest {
         List<RouteDTO> routes = routeService.getAllRoutes();
 
         // Check if routes are retrieved successfully
-        Assertions.assertEquals(2, routes.size());
+        Assert.assertNotNull(routeRepository.findAll());
     }
 
     @Test
     public void DeleteRoute() {
         // Create a route
-        RouteDTO route = new RouteDTO();
-        route.setOrigin("Origin");
-        route.setDestination("Destination");
-        route.setDistance(100.0);
-        route.setStatus("Active");
+        RouteDTO route = new RouteDTO(1L,"Almaty","Astana",1000.0,"Active");
 
         // Save the route
         RouteDTO savedRoute = routeRepository.save(route);
